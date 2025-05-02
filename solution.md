@@ -17,16 +17,16 @@
 
 ```mermaid
 graph TD
-    A[1. Analytic Method Selection]:::done
-    B[2. Data Preprocessing]:::done
-    C[3. Descriptive Summarization / EDA]:::done
-    D[4. Baseline Model: Logistic Regression - SystemDS]:::done
-    E[5. Feature Importance - SystemDS coefficients]:::done
-    F[6. Feature Selection]:::todo
-    G[7. Try Other Models]:::todo
-    H[8. Model Evaluation & Comparison]:::todo
-    I[9. Model Refinement]:::todo
-    J[10. Prepare for Web App]:::todo
+    A[1 Analytic Method Selection]:::done
+    B[2 Data Preprocessing]:::done
+    C[3 Descriptive Summarization / EDA]:::done
+    D[4 Baseline Model: Logistic Regression - SystemDS]:::done
+    E[5 Feature Importance - SystemDS coefficients]:::done
+    F[6 Feature Selection]:::todo
+    G[7 Try Other Models]:::todo
+    H[8 Model Evaluation & Comparison]:::todo
+    I[9 Model Refinement]:::todo
+    J[10 Prepare for Web App]:::todo
 
     A --> B --> C --> D --> E --> F --> G --> H --> I --> J
 
