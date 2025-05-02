@@ -1,62 +1,41 @@
 # Heart Attack Analysis: Solution Decision Points
 
-## 1. Analytic Method Selection
-- Options:
-  - Logistic Regression (baseline, interpretable)
-  - Decision Tree
-  - Random Forest
-  - Support Vector Machine
-  - Gradient Boosting (e.g., XGBoost)
-- Initial choice: Start with Logistic Regression for interpretability, then compare with tree-based models.
+## Progress Checklist
 
-## 2. Data Preprocessing
-- Options:
-  - Handle missing values (drop, impute)
-  - Encode categorical variables (one-hot, label encoding)
-  - Scale/normalize features (StandardScaler, MinMaxScaler)
-- Initial choice: Check for missing values, use label encoding for categorical features, standard scaling for numeric features.
+- [x] 1. Analytic Method Selection
+- [x] 2. Data Preprocessing
+- [x] 3. Descriptive Summarization / EDA
+- [x] 4. Baseline Model: Logistic Regression (SystemDS)
+- [x] 5. Feature Importance (SystemDS coefficients)
+- [ ] 6. Feature Selection
+- [ ] 7. Try Other Models
+- [ ] 8. Model Evaluation & Comparison
+- [ ] 9. Model Refinement
+- [ ] 10. Prepare for Web App
 
-## 3. Descriptive Summarization
-- Options:
-  - Summary statistics (mean, std, min, max)
-  - Value counts for categorical features
-  - Visualizations (histograms, boxplots, correlation heatmap)
-- Initial choice: Print summary statistics and value counts, plot histograms and correlation heatmap.
+## Workflow Diagram
 
-## 4. Feature Selection
-- Options:
-  - Correlation analysis
-  - Feature importance from models
-  - Recursive feature elimination
-- Initial choice: Use correlation and model-based feature importance.
+```mermaid
+graph TD
+    A[1. Analytic Method Selection]:::done
+    B[2. Data Preprocessing]:::done
+    C[3. Descriptive Summarization / EDA]:::done
+    D[4. Baseline Model: Logistic Regression - SystemDS]:::done
+    E[5. Feature Importance - SystemDS coefficients]:::done
+    F[6. Feature Selection]:::todo
+    G[7. Try Other Models]:::todo
+    H[8. Model Evaluation & Comparison]:::todo
+    I[9. Model Refinement]:::todo
+    J[10. Prepare for Web App]:::todo
 
-## 5. Data Transformation
-- Options:
-  - Binning continuous variables
-  - Log transformation for skewed features
-  - Polynomial features
-- Initial choice: Apply transformations if EDA suggests skewness or non-linearity.
+    A --> B --> C --> D --> E --> F --> G --> H --> I --> J
 
-## 6. Feature Engineering
-- Options:
-  - Combine features (e.g., ratios)
-  - Create interaction terms
-  - Domain-specific features
-- Initial choice: Explore after initial model evaluation.
+    classDef done fill:#c6f6d5,stroke:#2f855a,color:#22543d
+    classDef todo fill:#fefcbf,stroke:#b7791f,color:#744210
 
-## 7. Model Evaluation
-- Options:
-  - Accuracy, Precision, Recall, F1-score
-  - ROC-AUC
-  - Confusion Matrix
-- Initial choice: Use accuracy, F1-score, and ROC-AUC.
-
-## 8. Model Refinement
-- Options:
-  - Hyperparameter tuning (GridSearchCV)
-  - Try different algorithms
-  - Feature engineering
-- Initial choice: Tune hyperparameters and try top 2-3 models.
+    class A,B,C,D,E done
+    class F,G,H,I,J todo
+```
 
 ---
 

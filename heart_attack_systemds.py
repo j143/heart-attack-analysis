@@ -102,6 +102,6 @@ with SystemDSContext() as sds:
     for name, coef in feature_coefs_sorted:
         print(f"{name}: {coef:.4f}")
 
-    print("\nInterpretation: Features with higher absolute coefficient values have a stronger influence on the prediction. Positive values increase risk, negative values decrease risk.")
+    print("\nInterpretation: Features with higher absolute coefficient values have a stronger influence on the prediction.\nPositive values increase risk, negative values decrease risk.")
 
 print(f"SystemDS Logistic Regression Test Accuracy: {acc}")
