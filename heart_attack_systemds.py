@@ -28,7 +28,8 @@ plt.figure(figsize=(10, 8))
 sns.heatmap(df.corr(), annot=True, fmt='.2f', cmap='coolwarm')
 plt.title('Correlation Heatmap')
 plt.tight_layout()
-plt.show()
+plt.savefig('correlation_heatmap.png')
+plt.close()
 
 for col in df.columns:
     plt.figure()
@@ -36,9 +37,35 @@ for col in df.columns:
         sns.countplot(x=col, data=df)
     else:
         sns.histplot(df[col], kde=True)
-    plt.title(f'Distribution of {col}')
-    plt.tight_layout()
-    plt.show()
+    # plt.title(f'Distribution of {col}')
+    # plt.tight_layout()
+    # plt.savefig(f'distribution_{col}.png')
+    # plt.close()
+
+# Save all distributions in one file
+num_features = len(df.columns)
+cols = 3
+rows = int(np.ceil(num_features / cols))
+fig, axes = plt.subplots(rows, cols, figsize=(cols*5, rows*4))
+axes = axes.flatten()
+
+for idx, col in enumerate(df.columns):
+    ax = axes[idx]
+    if col in categorical_cols:
+        sns.countplot(x=col, data=df, ax=ax)
+    else:
+        sns.histplot(df[col], kde=True, ax=ax)
+    ax.set_title(f'Distribution of {col}')
+    ax.set_xlabel(col)
+    ax.set_ylabel('Count')
+
+# Remove any unused subplots
+for j in range(idx+1, len(axes)):
+    fig.delaxes(axes[j])
+
+plt.tight_layout()
+plt.savefig('distributions_all.png')
+plt.close()
 
 # 3. Data split and scaling (DataManager-style)
 X = df.drop('Target', axis=1).values
