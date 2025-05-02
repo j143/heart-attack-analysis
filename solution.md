@@ -55,8 +55,8 @@ graph TD
   `P(y=1|X) = 1 / (1 + exp(-(w^T X + b)))`
 - Example: If `w^T X + b = 0`, then `P(y=1|X) = 0.5` (neutral odds).
 
-| w^T X + b | P(y=1|X) |
-|:---------:|:--------:|
+| w^T X + b | P(y=1\|X) |
+|-----------|----------|
 |    -2     |   0.12   |
 |     0     |   0.50   |
 |     2     |   0.88   |
@@ -116,7 +116,7 @@ graph TD
 - Importance: `|w_i|` (absolute value of coefficient)
 - Example: If `w_Age = 0.8`, `w_Chol = -0.2`, Age is more influential.
 
-| Feature | Coefficient | Importance (|w|) |
+| Feature | Coefficient | Importance `(\|w\|)` |
 |---------|-------------|---------------|
 |   Age   |    0.8      |     0.8       |
 |  Chol   |   -0.2      |     0.2       |
