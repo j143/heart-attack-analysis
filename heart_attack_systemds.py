@@ -92,4 +92,16 @@ with SystemDSContext() as sds:
     yt_ds = sds.from_numpy(y_test + 1.0)
     _, y_pred, acc = multiLogRegPredict(Xt_ds, bias, Y=yt_ds, verbose=False).compute()
 
+    # Get logistic regression weights (feature importances)
+    weights = bias.compute().flatten()  # First is intercept, rest are features
+    feature_names = df.drop('Target', axis=1).columns
+    feature_coefs = list(zip(feature_names, weights[1:]))
+    feature_coefs_sorted = sorted(feature_coefs, key=lambda x: abs(x[1]), reverse=True)
+
+    print("\nSystemDS Logistic Regression Feature Importances (sorted by absolute value):")
+    for name, coef in feature_coefs_sorted:
+        print(f"{name}: {coef:.4f}")
+
+    print("\nInterpretation: Features with higher absolute coefficient values have a stronger influence on the prediction. Positive values increase risk, negative values decrease risk.")
+
 print(f"SystemDS Logistic Regression Test Accuracy: {acc}")
