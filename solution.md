@@ -17,16 +17,16 @@
 
 ```mermaid
 graph TD
-    A[1. Analytic Method Selection]:::done
-    B[2. Data Preprocessing]:::done
-    C[3. Descriptive Summarization / EDA]:::done
-    D[4. Baseline Model: Logistic Regression - SystemDS]:::done
-    E[5. Feature Importance - SystemDS coefficients]:::done
-    F[6. Feature Selection]:::todo
-    G[7. Try Other Models]:::todo
-    H[8. Model Evaluation & Comparison]:::todo
-    I[9. Model Refinement]:::todo
-    J[10. Prepare for Web App]:::todo
+    A[1 Analytic Method Selection]:::done
+    B[2 Data Preprocessing]:::done
+    C[3 Descriptive Summarization / EDA]:::done
+    D[4 Baseline Model: Logistic Regression - SystemDS]:::done
+    E[5 Feature Importance - SystemDS coefficients]:::done
+    F[6 Feature Selection]:::todo
+    G[7 Try Other Models]:::todo
+    H[8 Model Evaluation & Comparison]:::todo
+    I[9 Model Refinement]:::todo
+    J[10 Prepare for Web App]:::todo
 
     A --> B --> C --> D --> E --> F --> G --> H --> I --> J
 
@@ -45,6 +45,7 @@ graph TD
 > Each step below uses math, reasoning, and where helpful, tables or examples to ensure robust, interpretable, and actionable results.
 
 ### 1. Analytic Method Selection
+
 > [!IMPORTANT]
 > Model choice impacts interpretability and performance. Start simple, then increase complexity if needed.
 **Reasoning:** Choose a model that balances interpretability and predictive power. Logistic regression is interpretable and provides a strong baseline.
@@ -61,6 +62,7 @@ graph TD
 |     2     |   0.88   |
 
 ### 2. Data Preprocessing
+
 > [!TIP]
 > Always check for missing values and scale features for algorithms sensitive to feature magnitude.
 **Reasoning:** Clean data ensures reliable results. Handle missing values, encode categoricals, and scale features to standardize input for models.
@@ -74,6 +76,7 @@ graph TD
 | 40  |  50  | 10  |    -1.0      |
 
 ### 3. Descriptive Summarization / EDA
+
 > [!NOTE]
 > EDA helps you spot outliers, errors, and patterns before modeling.
 **Reasoning:** Understand data distribution, spot outliers, and detect data quality issues. EDA guides feature engineering and model choice.
@@ -91,6 +94,7 @@ graph TD
 | Std   |    16.33    |
 
 ### 4. Baseline Model: Logistic Regression (SystemDS)
+
 > [!TIP]
 > A baseline model sets a reference for improvement and helps catch data issues early.
 **Reasoning:** Establish a reference performance. Logistic regression is fast, interpretable, and highlights linear relationships.
@@ -104,6 +108,7 @@ graph TD
 | 0 |   0.2    |   0.22   |
 
 ### 5. Feature Importance (SystemDS coefficients)
+
 > [!NOTE]
 > Coefficient magnitude (|w|) shows feature influence. Sign shows direction (risk up/down).
 **Reasoning:** Coefficients show each feature's impact. Large absolute values mean strong influence. Helps in feature selection and interpretation.
@@ -117,6 +122,7 @@ graph TD
 |  Chol   |   -0.2      |     0.2       |
 
 ### 6. Feature Selection
+
 > [!CAUTION]
 > Highly correlated features (multicollinearity) can destabilize models. Remove or combine them.
 **Reasoning:** Remove redundant or irrelevant features to improve generalization and reduce overfitting. Correlation and model-based importances guide this.
@@ -130,6 +136,7 @@ graph TD
 |   Age     | Chol      |    0.10     |
 
 ### 7. Try Other Models
+
 > [!TIP]
 > Tree-based models and SVMs can capture non-linearities missed by logistic regression.
 **Reasoning:** Different algorithms may capture non-linearities or interactions missed by logistic regression. Compare to find the best performer.
@@ -144,6 +151,7 @@ graph TD
 | SVM          | Hinge Loss, Kernel      |
 
 ### 8. Model Evaluation & Comparison
+
 > [!IMPORTANT]
 > Use multiple metrics (accuracy, F1, ROC-AUC) for a complete view of model performance.
 **Reasoning:** Use metrics like accuracy, F1, ROC-AUC to objectively compare models. Ensures chosen model meets project goals.
@@ -159,6 +167,7 @@ graph TD
 | ROC-AUC  | Area under ROC curve          |
 
 ### 9. Model Refinement
+
 > [!TIP]
 > Hyperparameter tuning and feature engineering can yield significant performance gains.
 **Reasoning:** Tune hyperparameters and engineer features to boost performance. Prevents overfitting and underfitting.
@@ -172,6 +181,7 @@ graph TD
 | max_depth  | 3, 5, 10      |
 
 ### 10. Prepare for Web App
+
 > [!NOTE]
 > Save preprocessing steps and model weights for reproducible, reliable deployment.
 **Reasoning:** Package the best model for deployment. Enables real-world use and integration.
