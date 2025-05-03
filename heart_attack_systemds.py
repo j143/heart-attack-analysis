@@ -83,25 +83,46 @@ std = X_train.std(axis=0)
 X_train_scaled = (X_train - mean) / std
 X_test_scaled = (X_test - mean) / std
 
-# 4. Baseline Model: Logistic Regression with SystemDS
+# --- Feature Selection Step ---
+# 1. Identify highly correlated feature pairs (|corr| > 0.8)
+corr_matrix = df.drop('Target', axis=1).corr().abs()
+high_corr_pairs = []
+for i in range(len(corr_matrix.columns)):
+    for j in range(i+1, len(corr_matrix.columns)):
+        if corr_matrix.iloc[i, j] > 0.8:
+            high_corr_pairs.append((corr_matrix.columns[i], corr_matrix.columns[j], corr_matrix.iloc[i, j]))
+
+if high_corr_pairs:
+    print("\n[Feature Selection] Highly correlated feature pairs (|corr| > 0.8):")
+    for f1, f2, corr in high_corr_pairs:
+        print(f"{f1} <-> {f2}: correlation = {corr:.2f}")
+else:
+    print("\n[Feature Selection] No highly correlated feature pairs found (|corr| > 0.8).")
+
+# 2. SystemDS: Feature importances, model training, and evaluation in one context
 with SystemDSContext() as sds:
     X_ds = sds.from_numpy(X_train_scaled)
     y_ds = sds.from_numpy(y_train + 1.0)
     bias = multiLogReg(X_ds, y_ds, maxi=100, verbose=False)
+    weights = bias.compute().flatten()
+    feature_names = df.drop('Target', axis=1).columns
+    feature_coefs = list(zip(feature_names, weights[1:]))
+    feature_coefs_sorted = sorted(feature_coefs, key=lambda x: abs(x[1]))
+    print("\n[Feature Selection] Features with lowest absolute importance (SystemDS coefficients):")
+    for name, coef in feature_coefs_sorted[:3]:
+        print(f"{name}: {coef:.4f}")
+
+    # Model evaluation
     Xt_ds = sds.from_numpy(X_test_scaled)
     yt_ds = sds.from_numpy(y_test + 1.0)
     _, y_pred, acc = multiLogRegPredict(Xt_ds, bias, Y=yt_ds, verbose=False).compute()
 
-    # Get logistic regression weights (feature importances)
-    weights = bias.compute().flatten()  # First is intercept, rest are features
-    feature_names = df.drop('Target', axis=1).columns
-    feature_coefs = list(zip(feature_names, weights[1:]))
-    feature_coefs_sorted = sorted(feature_coefs, key=lambda x: abs(x[1]), reverse=True)
-
+    # Print all feature importances sorted by absolute value
+    feature_coefs_sorted_desc = sorted(feature_coefs, key=lambda x: abs(x[1]), reverse=True)
     print("\nSystemDS Logistic Regression Feature Importances (sorted by absolute value):")
-    for name, coef in feature_coefs_sorted:
+    for name, coef in feature_coefs_sorted_desc:
         print(f"{name}: {coef:.4f}")
 
     print("\nInterpretation: Features with higher absolute coefficient values have a stronger influence on the prediction.\nPositive values increase risk, negative values decrease risk.")
 
-print(f"SystemDS Logistic Regression Test Accuracy: {acc}")
+    print(f"SystemDS Logistic Regression Test Accuracy: {acc}")

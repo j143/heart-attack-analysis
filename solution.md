@@ -7,7 +7,7 @@
 - [x] 3. Descriptive Summarization / EDA
 - [x] 4. Baseline Model: Logistic Regression (SystemDS)
 - [x] 5. Feature Importance (SystemDS coefficients)
-- [ ] 6. Feature Selection
+- [x] 6. Feature Selection
 - [ ] 7. Try Other Models
 - [ ] 8. Model Evaluation & Comparison
 - [ ] 9. Model Refinement
@@ -22,7 +22,7 @@ graph TD
     C[3 Descriptive Summarization / EDA]:::done
     D[4 Baseline Model: Logistic Regression - SystemDS]:::done
     E[5 Feature Importance - SystemDS coefficients]:::done
-    F[6 Feature Selection]:::todo
+    F[6 Feature Selection]:::done
     G[7 Try Other Models]:::todo
     H[8 Model Evaluation & Comparison]:::todo
     I[9 Model Refinement]:::todo
@@ -48,6 +48,7 @@ graph TD
 
 > [!IMPORTANT]
 > Model choice impacts interpretability and performance. Start simple, then increase complexity if needed.
+
 **Reasoning:** Choose a model that balances interpretability and predictive power. Logistic regression is interpretable and provides a strong baseline.
 **Math:**
 - Logistic regression models the probability as:
@@ -65,6 +66,7 @@ graph TD
 
 > [!TIP]
 > Always check for missing values and scale features for algorithms sensitive to feature magnitude.
+
 **Reasoning:** Clean data ensures reliable results. Handle missing values, encode categoricals, and scale features to standardize input for models.
 **Math:**
 - Standardization: `X_scaled = (X - mean) / std`
@@ -79,6 +81,7 @@ graph TD
 
 > [!NOTE]
 > EDA helps you spot outliers, errors, and patterns before modeling.
+
 **Reasoning:** Understand data distribution, spot outliers, and detect data quality issues. EDA guides feature engineering and model choice.
 **Math:**
 - Mean: `mean = sum(x_i) / n`
@@ -97,6 +100,7 @@ graph TD
 
 > [!TIP]
 > A baseline model sets a reference for improvement and helps catch data issues early.
+
 **Reasoning:** Establish a reference performance. Logistic regression is fast, interpretable, and highlights linear relationships.
 **Math:**
 - Log-loss: `L = -[y * log(p) + (1-y) * log(1-p)]`
@@ -111,6 +115,7 @@ graph TD
 
 > [!NOTE]
 > Coefficient magnitude (|w|) shows feature influence. Sign shows direction (risk up/down).
+
 **Reasoning:** Coefficients show each feature's impact. Large absolute values mean strong influence. Helps in feature selection and interpretation.
 **Math:**
 - Importance: `|w_i|` (absolute value of coefficient)
@@ -125,6 +130,7 @@ graph TD
 
 > [!CAUTION]
 > Highly correlated features (multicollinearity) can destabilize models. Remove or combine them.
+
 **Reasoning:** Remove redundant or irrelevant features to improve generalization and reduce overfitting. Correlation and model-based importances guide this.
 **Math:**
 - Pearson correlation: `corr(X, Y) = cov(X, Y) / (std_X * std_Y)`
@@ -139,6 +145,7 @@ graph TD
 
 > [!TIP]
 > Tree-based models and SVMs can capture non-linearities missed by logistic regression.
+
 **Reasoning:** Different algorithms may capture non-linearities or interactions missed by logistic regression. Compare to find the best performer.
 **Math:**
 - Decision tree split: Information Gain, Gini Impurity
@@ -154,6 +161,7 @@ graph TD
 
 > [!IMPORTANT]
 > Use multiple metrics (accuracy, F1, ROC-AUC) for a complete view of model performance.
+
 **Reasoning:** Use metrics like accuracy, F1, ROC-AUC to objectively compare models. Ensures chosen model meets project goals.
 **Math:**
 - Accuracy: `accuracy = (TP + TN) / (TP + TN + FP + FN)`
@@ -170,6 +178,7 @@ graph TD
 
 > [!TIP]
 > Hyperparameter tuning and feature engineering can yield significant performance gains.
+
 **Reasoning:** Tune hyperparameters and engineer features to boost performance. Prevents overfitting and underfitting.
 **Math:**
 - Grid search: Try all parameter combinations
@@ -184,6 +193,7 @@ graph TD
 
 > [!NOTE]
 > Save preprocessing steps and model weights for reproducible, reliable deployment.
+
 **Reasoning:** Package the best model for deployment. Enables real-world use and integration.
 **Math:**
 - Save model: Serialize weights, scaler params, etc.
