@@ -1,0 +1,9 @@
+dropped,accuracy,features
+None,81.9672131147541,"Age,Sex,CP_Type,BloodPressure,Cholestrol,BloodSugar,ECG,MaxHeartRate,ExerciseAngia,FamilyHistory"
+Cholestrol,78.68852459016394,"Age,Sex,CP_Type,BloodPressure,BloodSugar,ECG,MaxHeartRate,ExerciseAngia,FamilyHistory"
+BloodPressure,77.04918032786885,"Age,Sex,CP_Type,Cholestrol,BloodSugar,ECG,MaxHeartRate,ExerciseAngia,FamilyHistory"
+ExerciseAngia,85.24590163934425,"Age,Sex,CP_Type,BloodPressure,Cholestrol,BloodSugar,ECG,MaxHeartRate,FamilyHistory"
+"Cholestrol,BloodPressure",77.04918032786885,"Age,Sex,CP_Type,BloodSugar,ECG,MaxHeartRate,ExerciseAngia,FamilyHistory"
+"Cholestrol,ExerciseAngia",81.9672131147541,"Age,Sex,CP_Type,BloodPressure,BloodSugar,ECG,MaxHeartRate,FamilyHistory"
+"BloodPressure,ExerciseAngia",78.68852459016394,"Age,Sex,CP_Type,Cholestrol,BloodSugar,ECG,MaxHeartRate,FamilyHistory"
+"Cholestrol,BloodPressure,ExerciseAngia",75.40983606557377,"Age,Sex,CP_Type,BloodSugar,ECG,MaxHeartRate,FamilyHistory"

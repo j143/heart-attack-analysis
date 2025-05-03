@@ -99,6 +99,15 @@ graph TD
 | Mean  |     220     |
 | Std   |    16.33    |
 
+**Visualizations:**
+- Correlation Heatmap
+
+  ![Correlation Heatmap](correlation_heatmap.png)
+
+- All Feature Distributions
+
+  ![All Feature Distributions](distributions_all.png)
+
 ### 4. Baseline Model: Logistic Regression (SystemDS)
 
 > [!TIP]
@@ -170,6 +179,13 @@ graph TD
 > - Features with the lowest absolute importance (|w|) are `Cholestrol`, `BloodPressure`, and `ExerciseAngia`. These may be considered for removal or further investigation, especially if model simplification or interpretability is desired.
 > - However, domain knowledge should also guide feature removal decisions.
 > - Retrain and evaluate the model after any feature removal to ensure performance is not degraded.
+
+**Visualization:**
+- Feature Removal Experiment Results
+
+  ![Feature Removal Accuracy](feature_removal_accuracy.png)
+
+---
 
 ### 7. Try Other Models
 

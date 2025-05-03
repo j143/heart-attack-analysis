@@ -173,3 +173,18 @@ results_df.to_csv('feature_removal_results.csv', index=False)
 print("\n[Summary of Experiments]")
 print(results_df)
 
+# Visualization of feature removal experiments
+results_df = pd.read_csv('feature_removal_results.csv')
+
+# Improved visualization with zoomed-in accuracy range for better insights
+plt.figure(figsize=(12, 6))
+sns.barplot(x='dropped', y='accuracy', data=results_df, palette='viridis')
+plt.xlabel('Dropped Features', fontsize=12)
+plt.ylabel('Test Accuracy', fontsize=12)
+plt.title('Test Accuracy for Each Feature Removal Experiment', fontsize=14)
+plt.ylim(70, 90)  # Zoom in on the accuracy range 70 to 90
+plt.xticks(rotation=45, ha='right', fontsize=10)
+plt.tight_layout()
+plt.savefig('feature_removal_accuracy.png')
+plt.close()
+print("Saved feature_removal_accuracy.png with experiment results.")
