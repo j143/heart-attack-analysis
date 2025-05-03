@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from systemds.context import SystemDSContext
 from systemds.operator.algorithm import multiLogReg, multiLogRegPredict
+import itertools
 
 # 1. Load data
 df = pd.read_csv('Heart_Attack_Analysis_Data.csv')
@@ -126,3 +127,49 @@ with SystemDSContext() as sds:
     print("\nInterpretation: Features with higher absolute coefficient values have a stronger influence on the prediction.\nPositive values increase risk, negative values decrease risk.")
 
     print(f"SystemDS Logistic Regression Test Accuracy: {acc}")
+
+# --- Systematic Experimentation with Feature Removal ---
+# Features to experiment with removing
+investigate_features = ['Cholestrol', 'BloodPressure', 'ExerciseAngia']
+
+# All combinations of features to drop (including none)
+results = []
+for n in range(len(investigate_features) + 1):
+    for drop_set in itertools.combinations(investigate_features, n):
+        drop_list = list(drop_set)
+        print(f"\n[Experiment] Dropping features: {drop_list if drop_list else 'None'}")
+        # Prepare data with selected features dropped
+        X_exp = df.drop(['Target'] + drop_list, axis=1).values
+        feature_names_exp = df.drop(['Target'] + drop_list, axis=1).columns
+        # Data split and scaling
+        num_samples = X_exp.shape[0]
+        indices = np.arange(num_samples)
+        np.random.seed(42)
+        np.random.shuffle(indices)
+        split = int(0.8 * num_samples)
+        train_idx, test_idx = indices[:split], indices[split:]
+        X_train_exp, X_test_exp = X_exp[train_idx], X_exp[test_idx]
+        y_train_exp, y_test_exp = y[train_idx], y[test_idx]
+        mean_exp = X_train_exp.mean(axis=0)
+        std_exp = X_train_exp.std(axis=0)
+        X_train_scaled_exp = (X_train_exp - mean_exp) / std_exp
+        X_test_scaled_exp = (X_test_exp - mean_exp) / std_exp
+        with SystemDSContext() as sds:
+            X_ds = sds.from_numpy(X_train_scaled_exp)
+            y_ds = sds.from_numpy(y_train_exp + 1.0)
+            bias = multiLogReg(X_ds, y_ds, maxi=100, verbose=False)
+            Xt_ds = sds.from_numpy(X_test_scaled_exp)
+            yt_ds = sds.from_numpy(y_test_exp + 1.0)
+            _, y_pred, acc = multiLogRegPredict(Xt_ds, bias, Y=yt_ds, verbose=False).compute()
+            print(f"Test Accuracy: {acc}")
+            results.append({'dropped': drop_list, 'accuracy': acc, 'features': list(feature_names_exp)})
+
+# Save results to CSV for systematic tracking
+results_df = pd.DataFrame(results)
+results_df['dropped'] = results_df['dropped'].apply(lambda x: ','.join(x) if x else 'None')
+results_df['features'] = results_df['features'].apply(lambda x: ','.join(x))
+results_df.to_csv('feature_removal_results.csv', index=False)
+
+print("\n[Summary of Experiments]")
+print(results_df)
+
