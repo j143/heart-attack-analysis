@@ -50,6 +50,7 @@ graph TD
 > Model choice impacts interpretability and performance. Start simple, then increase complexity if needed.
 
 **Reasoning:** Choose a model that balances interpretability and predictive power. Logistic regression is interpretable and provides a strong baseline.
+
 **Math:**
 - Logistic regression models the probability as:
   
@@ -68,6 +69,7 @@ graph TD
 > Always check for missing values and scale features for algorithms sensitive to feature magnitude.
 
 **Reasoning:** Clean data ensures reliable results. Handle missing values, encode categoricals, and scale features to standardize input for models.
+
 **Math:**
 - Standardization: `X_scaled = (X - mean) / std`
 - Example: If Age has mean 50 and std 10, then Age 60 → `(60-50)/10 = 1.0`
@@ -83,6 +85,7 @@ graph TD
 > EDA helps you spot outliers, errors, and patterns before modeling.
 
 **Reasoning:** Understand data distribution, spot outliers, and detect data quality issues. EDA guides feature engineering and model choice.
+
 **Math:**
 - Mean: `mean = sum(x_i) / n`
 - Std: `std = sqrt(sum((x_i - mean)^2) / n)`
@@ -102,6 +105,7 @@ graph TD
 > A baseline model sets a reference for improvement and helps catch data issues early.
 
 **Reasoning:** Establish a reference performance. Logistic regression is fast, interpretable, and highlights linear relationships.
+
 **Math:**
 - Log-loss: `L = -[y * log(p) + (1-y) * log(1-p)]`
 - Example: If `y=1`, `p=0.8`, `L = -log(0.8) ≈ 0.22`
@@ -117,6 +121,7 @@ graph TD
 > Coefficient magnitude (|w|) shows feature influence. Sign shows direction (risk up/down).
 
 **Reasoning:** Coefficients show each feature's impact. Large absolute values mean strong influence. Helps in feature selection and interpretation.
+
 **Math:**
 - Importance: `|w_i|` (absolute value of coefficient)
 - Example: If `w_Age = 0.8`, `w_Chol = -0.2`, Age is more influential.
@@ -132,14 +137,39 @@ graph TD
 > Highly correlated features (multicollinearity) can destabilize models. Remove or combine them.
 
 **Reasoning:** Remove redundant or irrelevant features to improve generalization and reduce overfitting. Correlation and model-based importances guide this.
+
 **Math:**
 - Pearson correlation: `corr(X, Y) = cov(X, Y) / (std_X * std_Y)`
 - Example: If `corr(Age, MaxHeartRate) = 0.9`, consider dropping one.
 
-| Feature 1 | Feature 2 | Correlation |
-|-----------|-----------|-------------|
-|   Age     | MaxHR     |    0.90     |
-|   Age     | Chol      |    0.10     |
+| Feature 1      | Feature 2      | Correlation |
+|--------------- |--------------- |------------ |
+| (none found)   |                |             |
+
+> [!NOTE]
+> **Interpretation of Correlation Results:**
+> - No highly correlated feature pairs (|corr| > 0.8) were found in this dataset. This means multicollinearity is not a concern, and all features can be retained from a correlation perspective.
+> - Next, consider feature importance for further selection.
+
+**Feature Importance (SystemDS coefficients):**
+
+| Feature        | Coefficient | Importance (\|w\|) |
+|--------------- |------------|------------------|
+| Age            |   0.8976   |     0.8976       |
+| ECG            |  -0.6899   |     0.6899       |
+| Sex            |  -0.6647   |     0.6647       |
+| MaxHeartRate   |   0.5000   |     0.5000       |
+| BloodSugar     |  -0.2780   |     0.2780       |
+| CP_Type        |   0.2669   |     0.2669       |
+| FamilyHistory  |  -0.2578   |     0.2578       |
+| ExerciseAngia  |   0.1738   |     0.1738       |
+| BloodPressure  |   0.1719   |     0.1719       |
+| Cholestrol     |  -0.0222   |     0.0222       |
+
+> [!NOTE]
+> - Features with the lowest absolute importance (|w|) are `Cholestrol`, `BloodPressure`, and `ExerciseAngia`. These may be considered for removal or further investigation, especially if model simplification or interpretability is desired.
+> - However, domain knowledge should also guide feature removal decisions.
+> - Retrain and evaluate the model after any feature removal to ensure performance is not degraded.
 
 ### 7. Try Other Models
 
@@ -147,6 +177,7 @@ graph TD
 > Tree-based models and SVMs can capture non-linearities missed by logistic regression.
 
 **Reasoning:** Different algorithms may capture non-linearities or interactions missed by logistic regression. Compare to find the best performer.
+
 **Math:**
 - Decision tree split: Information Gain, Gini Impurity
 - SVM: `max(0, 1 - y * (w^T x + b))` (hinge loss)
@@ -163,6 +194,7 @@ graph TD
 > Use multiple metrics (accuracy, F1, ROC-AUC) for a complete view of model performance.
 
 **Reasoning:** Use metrics like accuracy, F1, ROC-AUC to objectively compare models. Ensures chosen model meets project goals.
+
 **Math:**
 - Accuracy: `accuracy = (TP + TN) / (TP + TN + FP + FN)`
 - F1: `F1 = 2 * (precision * recall) / (precision + recall)`
@@ -180,6 +212,7 @@ graph TD
 > Hyperparameter tuning and feature engineering can yield significant performance gains.
 
 **Reasoning:** Tune hyperparameters and engineer features to boost performance. Prevents overfitting and underfitting.
+
 **Math:**
 - Grid search: Try all parameter combinations
 - Regularization: `L1 = sum |w|`, `L2 = sum w^2`
@@ -195,6 +228,7 @@ graph TD
 > Save preprocessing steps and model weights for reproducible, reliable deployment.
 
 **Reasoning:** Package the best model for deployment. Enables real-world use and integration.
+
 **Math:**
 - Save model: Serialize weights, scaler params, etc.
 - Example: Save as .pkl, .onnx, or .dml for SystemDS
