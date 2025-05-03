@@ -3,8 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from systemds.context import SystemDSContext
-from systemds.operator.algorithm import multiLogReg, multiLogRegPredict
+from systemds.operator.algorithm import multiLogReg, multiLogRegPredict, decisionTree, decisionTreePredict, randomForest, randomForestPredict
 import itertools
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 # 1. Load data
 df = pd.read_csv('Heart_Attack_Analysis_Data.csv')
@@ -188,3 +190,69 @@ plt.tight_layout()
 plt.savefig('feature_removal_accuracy.png')
 plt.close()
 print("Saved feature_removal_accuracy.png with experiment results.")
+
+# --- Model Comparison: Decision Tree and Random Forest (SystemDS) ---
+model_results = []
+
+# Prepare data (no features dropped)
+X_full = df.drop('Target', axis=1).values
+y_full = df['Target'].values.reshape(-1, 1)
+num_samples = X_full.shape[0]
+indices = np.arange(num_samples)
+np.random.seed(42)
+np.random.shuffle(indices)
+split = int(0.8 * num_samples)
+train_idx, test_idx = indices[:split], indices[split:]
+X_train_full, X_test_full = X_full[train_idx], X_full[test_idx]
+y_train_full, y_test_full = y_full[train_idx], y_full[test_idx]
+mean_full = X_train_full.mean(axis=0)
+std_full = X_train_full.std(axis=0)
+X_train_scaled_full = (X_train_full - mean_full) / std_full
+X_test_scaled_full = (X_test_full - mean_full) / std_full
+
+# Prepare ctypes for SystemDS tree models
+# 2 = numerical, 1 = categorical
+ctypes = np.array([2,1,1,2,2,1,2,2,1,1])
+
+# Get accuracy for 'no features dropped' robustly
+logreg_row = results_df[results_df['dropped'].str.strip().str.lower() == 'none']
+if not logreg_row.empty:
+    logreg_acc = logreg_row['accuracy'].values[0]
+else:
+    print("[ERROR] Could not find 'None' in 'dropped' column for logistic regression accuracy. Using 0.0 as fallback.")
+    logreg_acc = 0.0
+model_results.append({'model': 'SystemDS Logistic Regression', 'accuracy': logreg_acc})
+
+with SystemDSContext() as sds:
+    # Decision Tree
+    X_train_sds = sds.from_numpy(X_train_scaled_full)
+    y_train_sds = sds.from_numpy(y_train_full + 1.0)
+    X_test_sds = sds.from_numpy(X_test_scaled_full)
+    y_test_sds = sds.from_numpy(y_test_full + 1.0)
+    ctypes_sds = sds.from_numpy(ctypes)
+    dt_model = decisionTree(X_train_sds, y_train_sds, ctypes_sds, icpt=1, max_depth=5)
+    dt_pred = decisionTreePredict(X_test_sds, dt_model).compute()
+    dt_acc = np.mean((dt_pred > 0.5).astype(int) == y_test_full)
+    print(f"SystemDS Decision Tree Test Accuracy: {dt_acc:.4f}")
+    model_results.append({'model': 'SystemDS Decision Tree', 'accuracy': dt_acc})
+
+    # Random Forest
+    rf_model = randomForest(X_train_sds, y_train_sds, ctypes_sds, num_trees=100, icpt=1, max_depth=5)
+    rf_pred = randomForestPredict(X_test_sds, rf_model).compute()
+    rf_acc = np.mean((rf_pred > 0.5).astype(int) == y_test_full)
+    print(f"SystemDS Random Forest Test Accuracy: {rf_acc:.4f}")
+    model_results.append({'model': 'SystemDS Random Forest', 'accuracy': rf_acc})
+
+# Save and visualize model comparison
+model_results_df = pd.DataFrame(model_results)
+model_results_df.to_csv('model_comparison_results.csv', index=False)
+
+plt.figure(figsize=(8, 5))
+plt.bar(model_results_df['model'], model_results_df['accuracy'], color=['#4C72B0', '#55A868', '#C44E52'])
+plt.ylabel('Test Accuracy')
+plt.title('Model Comparison: Test Accuracy (SystemDS)')
+plt.ylim(0, 1)
+plt.tight_layout()
+plt.savefig('model_comparison_accuracy.png')
+plt.close()
+print("Saved model_comparison_accuracy.png with SystemDS model comparison results.")
