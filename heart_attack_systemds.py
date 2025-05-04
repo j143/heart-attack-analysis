@@ -5,8 +5,6 @@ import seaborn as sns
 from systemds.context import SystemDSContext
 from systemds.operator.algorithm import multiLogReg, multiLogRegPredict, decisionTree, decisionTreePredict, randomForest, randomForestPredict
 import itertools
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
 
 # 1. Load data
 df = pd.read_csv('Heart_Attack_Analysis_Data.csv')
@@ -177,6 +175,7 @@ print(results_df)
 
 # Visualization of feature removal experiments
 results_df = pd.read_csv('feature_removal_results.csv')
+results_df['dropped'] = results_df['dropped'].fillna('None')
 
 # Improved visualization with zoomed-in accuracy range for better insights
 plt.figure(figsize=(12, 6))
@@ -211,13 +210,15 @@ X_train_scaled_full = (X_train_full - mean_full) / std_full
 X_test_scaled_full = (X_test_full - mean_full) / std_full
 
 # Prepare ctypes for SystemDS tree models
-# 2 = numerical, 1 = categorical
-ctypes = np.array([2,1,1,2,2,1,2,2,1,1])
+# 2 = numerical, 1 = categorical (order: Age, Sex, CP_Type, BloodPressure, Cholestrol, BloodSugar, ECG, MaxHeartRate, ExerciseAngia, FamilyHistory)
+ctypes = np.array([2,1,1,2,2,1,2,2,1,1,1])  # Add 1 for the label (Target) at the end
 
 # Get accuracy for 'no features dropped' robustly
+print("[DEBUG] Values in 'dropped' column:", results_df['dropped'].tolist())
 logreg_row = results_df[results_df['dropped'].str.strip().str.lower() == 'none']
 if not logreg_row.empty:
     logreg_acc = logreg_row['accuracy'].values[0]
+    print(f"[DEBUG] Found logistic regression accuracy: {logreg_acc}")
 else:
     print("[ERROR] Could not find 'None' in 'dropped' column for logistic regression accuracy. Using 0.0 as fallback.")
     logreg_acc = 0.0
@@ -230,15 +231,15 @@ with SystemDSContext() as sds:
     X_test_sds = sds.from_numpy(X_test_scaled_full)
     y_test_sds = sds.from_numpy(y_test_full + 1.0)
     ctypes_sds = sds.from_numpy(ctypes)
-    dt_model = decisionTree(X_train_sds, y_train_sds, ctypes_sds, icpt=1, max_depth=5)
-    dt_pred = decisionTreePredict(X_test_sds, dt_model, X_train_sds).compute()
+    dt_model = decisionTree(X_train_sds, y_train_sds, ctypes_sds, max_depth=5)
+    dt_pred = decisionTreePredict(X_test_sds, dt_model, ctypes_sds).compute()
     dt_acc = np.mean((dt_pred > 0.5).astype(int) == y_test_full)
     print(f"SystemDS Decision Tree Test Accuracy: {dt_acc:.4f}")
     model_results.append({'model': 'SystemDS Decision Tree', 'accuracy': dt_acc})
 
     # Random Forest
-    rf_model = randomForest(X_train_sds, y_train_sds, ctypes_sds, num_trees=100, icpt=1, max_depth=5)
-    rf_pred = randomForestPredict(X_test_sds, rf_model, X_train_sds).compute()
+    rf_model = randomForest(X_train_sds, y_train_sds, ctypes_sds, num_trees=100, max_depth=5)
+    rf_pred = randomForestPredict(X_test_sds, rf_model, ctypes_sds).compute()
     rf_acc = np.mean((rf_pred > 0.5).astype(int) == y_test_full)
     print(f"SystemDS Random Forest Test Accuracy: {rf_acc:.4f}")
     model_results.append({'model': 'SystemDS Random Forest', 'accuracy': rf_acc})
