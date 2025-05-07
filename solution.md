@@ -185,11 +185,7 @@ graph TD
 
   ![Feature Removal Accuracy](feature_removal_accuracy.png)
 
-### Feature Removal Impact Visualization
 
-The line plot below shows the impact of removing specific features on the model's test accuracy. This visualization complements the bar plot and provides additional insights into how feature removal affects performance.
-
-![Feature Removal Impact](feature_removal_impact.png)
 
 ---
 
