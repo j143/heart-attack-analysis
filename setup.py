@@ -9,7 +9,6 @@ setup(
     install_requires=[
         'pandas',
         'numpy',
-        'scikit-learn',
         'systemds',
     ],
     python_requires='>=3.7',

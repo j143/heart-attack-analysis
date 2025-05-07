@@ -6,6 +6,7 @@ from systemds.context import SystemDSContext
 from systemds.operator.algorithm import multiLogReg, multiLogRegPredict, l2svm, l2svmPredict, pca
 import itertools
 from sklearn.decomposition import PCA
+import joblib
 
 # 1. Load data
 df = pd.read_csv('Heart_Attack_Analysis_Data.csv')
@@ -129,6 +130,10 @@ with SystemDSContext() as sds:
 
     print(f"SystemDS Logistic Regression Test Accuracy: {acc}")
 
+# Save the trained Logistic Regression model and scaler
+joblib.dump(bias, 'logistic_regression_model.pkl')
+joblib.dump({'mean': mean, 'std': std}, 'scaler.pkl')
+
 # --- Adding L2SVM for Model Comparison ---
 with SystemDSContext() as sds:
     # Train L2SVM model
@@ -144,6 +149,9 @@ with SystemDSContext() as sds:
     # Calculate accuracy for L2SVM manually
     l2svm_acc = np.mean((l2svm_y_pred_maxed.flatten() == y_test.flatten()).astype(float))
     print(f"L2SVM Test Accuracy: {l2svm_acc}")
+
+# Save the trained L2SVM model
+joblib.dump(l2svm_model, 'l2svm_model.pkl')
 
 # Updated L2SVM Model Outputs Visualization
 plt.figure(figsize=(10, 6))
