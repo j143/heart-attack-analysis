@@ -18,6 +18,10 @@ try:
 except Exception as e:
     print(f"Error loading L2SVM weights: {e}")
 
+# Adjust L2SVM weights to include the bias term
+if len(l2svm_weights) == X_test_scaled.shape[1]:
+    l2svm_weights = np.append(l2svm_weights, 0)  # Add a bias term if missing
+
 # Example inference using Logistic Regression weights
 def logistic_regression_inference(weights, X):
     bias = weights[0]
