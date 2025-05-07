@@ -1,6 +1,29 @@
 import joblib
 import numpy as np
-from heart_attack_systemds import X_test_scaled, y_test
+import pandas as pd
+
+# Load the heart attack dataset
+df = pd.read_csv('Heart_Attack_Analysis_Data.csv')
+
+# Prepare the test data directly from the dataset
+X = df.drop('Target', axis=1).values
+y = df['Target'].values.reshape(-1, 1)
+
+# Split the data into training and testing sets
+num_samples = X.shape[0]
+indices = np.arange(num_samples)
+np.random.seed(42)
+np.random.shuffle(indices)
+split = int(0.8 * num_samples)
+train_idx, test_idx = indices[:split], indices[split:]
+X_test = X[test_idx]
+y_test = y[test_idx]
+
+# Scale the test data using the saved scaler
+scaler = joblib.load('scaler.pkl')
+mean = scaler['mean']
+std = scaler['std']
+X_test_scaled = (X_test - mean) / std
 
 # Load and verify Logistic Regression weights
 try:
@@ -38,25 +61,6 @@ def l2svm_inference(weights, X):
     decision_values = np.dot(X, coefficients) + bias
     predictions = (decision_values >= 0).astype(int)
     return predictions
-
-# Dummy data for testing
-X_dummy = np.random.rand(5, len(logistic_regression_weights) - 1)  # Adjust dimensions to match weights
-
-# Logistic Regression inference
-try:
-    lr_predictions = logistic_regression_inference(logistic_regression_weights, X_dummy)
-    print("\nLogistic Regression predictions:")
-    print(lr_predictions)
-except Exception as e:
-    print(f"Error during Logistic Regression inference: {e}")
-
-# L2SVM inference
-try:
-    l2svm_predictions = l2svm_inference(l2svm_weights, X_dummy)
-    print("\nL2SVM predictions:")
-    print(l2svm_predictions)
-except Exception as e:
-    print(f"Error during L2SVM inference: {e}")
 
 # Logistic Regression inference on real test data
 try:

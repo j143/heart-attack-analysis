@@ -86,6 +86,11 @@ std = X_train.std(axis=0)
 X_train_scaled = (X_train - mean) / std
 X_test_scaled = (X_test - mean) / std
 
+# Save the scaler in heart_attack_systemds.py
+scaler = {'mean': mean, 'std': std}
+joblib.dump(scaler, 'scaler.pkl')
+print("Scaler saved as 'scaler.pkl'.")
+
 # --- Feature Selection Step ---
 # 1. Identify highly correlated feature pairs (|corr| > 0.8)
 corr_matrix = df.drop('Target', axis=1).corr().abs()
