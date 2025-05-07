@@ -303,13 +303,3 @@ The following visualizations show how the test accuracy of each model changes wh
 | Scaler Params| scaler.pkl  |
 
 ---
-
-### Refactoring and Modularization
-
-To improve maintainability and scalability, the project was refactored into a modular structure. The main script (`heart_attack_systemds.py`) now uses a pipeline defined in `src/pipeline.py`. Helper functions are located in `src/utils.py`.
-
-#### Benefits of Modularization
-- **Readability**: Code is easier to understand and navigate.
-- **Reusability**: Functions can be reused across different parts of the project.
-- **Scalability**: New features can be added without cluttering the main script.
-- **Testing**: Individual modules can be tested independently.
