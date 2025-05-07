@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from systemds.context import SystemDSContext
-from systemds.operator.algorithm import multiLogReg, multiLogRegPredict
+from systemds.operator.algorithm import multiLogReg, multiLogRegPredict, l2svm, l2svmPredict
 import itertools
 
 # 1. Load data
@@ -127,6 +127,27 @@ with SystemDSContext() as sds:
     print("\nInterpretation: Features with higher absolute coefficient values have a stronger influence on the prediction.\nPositive values increase risk, negative values decrease risk.")
 
     print(f"SystemDS Logistic Regression Test Accuracy: {acc}")
+
+# --- Adding L2SVM for Model Comparison ---
+with SystemDSContext() as sds:
+    # Train L2SVM model
+    X_ds = sds.from_numpy(X_train_scaled)
+    y_ds = sds.from_numpy(y_train + 1.0)
+    l2svm_model = l2svm(X_ds, y_ds, reg=0.01, maxIterations=100, verbose=False)
+    l2svm_weights = l2svm_model.compute().flatten()
+
+    # Evaluate L2SVM model
+    Xt_ds = sds.from_numpy(X_test_scaled)
+    l2svm_y_pred_raw, l2svm_y_pred_maxed = l2svmPredict(Xt_ds, l2svm_model, verbose=False).compute()
+
+    # Calculate accuracy for L2SVM manually
+    l2svm_acc = np.mean((l2svm_y_pred_maxed.flatten() == y_test.flatten()).astype(float))
+    print(f"L2SVM Test Accuracy: {l2svm_acc}")
+
+# Compare L2SVM with Logistic Regression
+print("\nModel Comparison:")
+print(f"Logistic Regression Test Accuracy: {acc}")
+print(f"L2SVM Test Accuracy: {l2svm_acc}")
 
 # --- Systematic Experimentation with Feature Removal ---
 # Features to experiment with removing
