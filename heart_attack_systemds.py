@@ -3,8 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from systemds.context import SystemDSContext
-from systemds.operator.algorithm import multiLogReg, multiLogRegPredict, l2svm, l2svmPredict
+from systemds.operator.algorithm import multiLogReg, multiLogRegPredict, l2svm, l2svmPredict, pca
 import itertools
+from sklearn.decomposition import PCA
 
 # 1. Load data
 df = pd.read_csv('Heart_Attack_Analysis_Data.csv')
@@ -144,6 +145,18 @@ with SystemDSContext() as sds:
     l2svm_acc = np.mean((l2svm_y_pred_maxed.flatten() == y_test.flatten()).astype(float))
     print(f"L2SVM Test Accuracy: {l2svm_acc}")
 
+# Updated L2SVM Model Outputs Visualization
+plt.figure(figsize=(10, 6))
+plt.scatter(range(len(l2svm_y_pred_maxed)), l2svm_y_pred_maxed.flatten(), label='Maxed Predictions', alpha=0.7, color='blue')
+plt.scatter(range(len(y_test)), y_test.flatten(), label='True Labels', alpha=0.7, color='red', marker='x')
+plt.title('L2SVM Model Outputs: Maxed Predictions vs True Labels')
+plt.xlabel('Sample Index')
+plt.ylabel('Prediction / Label')
+plt.legend()
+plt.tight_layout()
+plt.savefig('l2svm_model_outputs.png')
+plt.close()
+
 # Compare L2SVM with Logistic Regression
 print("\nModel Comparison:")
 print(f"Logistic Regression Test Accuracy: {acc}")
@@ -209,3 +222,49 @@ plt.tight_layout()
 plt.savefig('feature_removal_accuracy.png')
 plt.close()
 print("Saved feature_removal_accuracy.png with experiment results.")
+
+# Updated L2-SVM visualization to use a bar plot for consistency with Logistic Regression
+plt.figure(figsize=(12, 6))
+sns.barplot(x='dropped', y='accuracy', data=results_df, palette='viridis')
+plt.xlabel('Dropped Features', fontsize=12)
+plt.ylabel('Test Accuracy', fontsize=12)
+plt.title('L2-SVM: Test Accuracy for Each Feature Removal Experiment', fontsize=14)
+plt.ylim(70, 90)  # Consistent scaling with Logistic Regression
+plt.xticks(rotation=45, ha='right', fontsize=10)
+plt.tight_layout()
+plt.savefig('l2svm_feature_removal_accuracy.png')
+plt.close()
+
+# Visualization of L2SVM Support Vectors and Decision Boundary using SystemDS PCA
+
+# Perform PCA to reduce dimensions to 2D for visualization
+with SystemDSContext() as sds:
+    X_ds = sds.from_numpy(X_train_scaled)
+    [X_train_pca, components, _, _] = pca(X_ds, K=2, center=True, scale=True)
+    X_train_pca_2d = X_train_pca.compute()
+
+# Train L2SVM model on reduced dimensions
+with SystemDSContext() as sds:
+    X_ds_pca = sds.from_numpy(X_train_pca_2d)
+    y_ds = sds.from_numpy(y_train + 1.0)
+    l2svm_model_pca = l2svm(X_ds_pca, y_ds, reg=0.01, maxIterations=100, verbose=False)
+    l2svm_weights_pca = l2svm_model_pca.compute().flatten()
+
+# Separate weights and intercept from l2svm_weights_pca
+weights_pca = l2svm_weights_pca[:-1]  # Exclude the intercept term
+intercept_pca = l2svm_weights_pca[-1]  # The last element is the intercept
+
+# Compute support vectors using corrected weights and intercept
+#support_vectors_pca = X_train_pca_2d[np.abs(np.dot(X_train_pca_2d, weights_pca) + intercept_pca) <= 1e-2]
+
+# Plot decision boundary and support vectors in PCA-reduced space
+# plt.figure(figsize=(10, 6))
+# plt.scatter(X_train_pca_2d[:, 0], X_train_pca_2d[:, 1], c=y_train.flatten(), cmap='coolwarm', label='Training Data', alpha=0.7)
+# plt.scatter(support_vectors_pca[:, 0], support_vectors_pca[:, 1], edgecolor='k', facecolor='none', label='Support Vectors', s=100)
+# plt.title('L2SVM Decision Boundary and Support Vectors (PCA Reduced)')
+# plt.xlabel('Principal Component 1')
+# plt.ylabel('Principal Component 2')
+# plt.legend()
+# plt.tight_layout()
+# plt.savefig('l2svm_decision_boundary_pca.png')
+# plt.close()

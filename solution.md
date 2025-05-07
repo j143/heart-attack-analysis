@@ -185,6 +185,78 @@ graph TD
 
   ![Feature Removal Accuracy](feature_removal_accuracy.png)
 
+### Feature Removal Impact Visualization
+
+The line plot below shows the impact of removing specific features on the model's test accuracy. This visualization complements the bar plot and provides additional insights into how feature removal affects performance.
+
+![Feature Removal Impact](feature_removal_impact.png)
+
+---
+
+### Model Comparison: Logistic Regression vs L2-SVM
+
+We compared the Logistic Regression and L2-SVM models at multiple levels, including their performance during feature removal experiments. Below is a side-by-side comparison of their behavior:
+
+#### Test Accuracy
+| Model               | Test Accuracy |
+|---------------------|---------------|
+| Logistic Regression | `acc`         |
+| L2-SVM              | `l2svm_acc`   |
+
+#### Feature Removal Impact
+The following visualizations show how the test accuracy of each model changes when specific features are removed:
+
+- **Logistic Regression**:
+  ![Feature Removal Accuracy](feature_removal_accuracy.png)
+
+- **L2-SVM**:
+  ![Feature Removal Impact](feature_removal_impact.png)
+
+#### Insights
+- Logistic Regression provides a strong baseline with interpretable coefficients, making it easier to understand feature importance.
+- L2-SVM offers a robust alternative, especially for datasets with complex decision boundaries.
+- Both models show varying sensitivity to feature removal, highlighting the importance of specific features in predicting heart attack risk.
+
+---
+
+## Model Selection
+
+### Logistic Regression
+- **Test Accuracy**: The Logistic Regression model achieved a test accuracy of `acc`.
+- **Feature Importances**: The coefficients of the Logistic Regression model were analyzed to determine the most and least influential features.
+
+### L2-SVM (Support Vector Machine with L2 Regularization)
+- **Test Accuracy**: The L2-SVM model achieved a test accuracy of `l2svm_acc`.
+- **Visualization**: The results of the L2-SVM model were visualized to compare its performance with Logistic Regression.
+
+#### Visualization Details
+- **Feature Removal Experiments**: The impact of removing specific features on the model's accuracy was visualized in `feature_removal_accuracy.png`.
+- **Correlation Heatmap**: A heatmap of feature correlations was saved as `correlation_heatmap.png`.
+- **Feature Distributions**: The distributions of all features were saved in `distributions_all.png`.
+- **L2SVM Model Outputs**: A scatter plot comparing raw predictions, maxed predictions, and true labels was saved as `l2svm_model_outputs.png`.
+
+#### Insights
+- The L2-SVM model provides a robust alternative to Logistic Regression, especially for binary classification tasks.
+- The visualization highlights the alignment of predictions with true labels, showcasing the model's performance.
+
+---
+
+### L2-SVM Model Outputs Visualization
+
+The scatter plot below compares the raw predictions, maxed predictions, and true labels for the L2-SVM model. This visualization helps in understanding the alignment of the model's predictions with the actual labels.
+
+![L2SVM Model Outputs](l2svm_model_outputs.png)
+
+#### Interpretation
+- **Raw Predictions**: These are the continuous output values from the L2-SVM model before applying any thresholding. They indicate the confidence of the model in its predictions.
+- **Maxed Predictions**: These are the thresholded predictions, where values are converted to binary labels (e.g., 1 or -1). This is the final output used for evaluation.
+- **True Labels**: These are the actual labels from the dataset, used to compare and evaluate the model's performance.
+
+From the visualization:
+- The raw predictions generally align well with the true labels, indicating that the model is confident in its predictions.
+- The maxed predictions closely match the true labels, showcasing the model's effectiveness in binary classification.
+- Any significant deviations between the maxed predictions and true labels highlight misclassifications, which can be further analyzed to improve the model.
+
 ---
 
 ### 7. Try Other Models
