@@ -130,9 +130,9 @@ with SystemDSContext() as sds:
 
     print(f"SystemDS Logistic Regression Test Accuracy: {acc}")
 
-# Save the trained Logistic Regression model and scaler
-joblib.dump(bias, 'logistic_regression_model.pkl')
-joblib.dump({'mean': mean, 'std': std}, 'scaler.pkl')
+# Save only the weights of the Logistic Regression model
+logistic_regression_weights = weights
+joblib.dump(logistic_regression_weights, 'logistic_regression_weights.pkl')
 
 # --- Adding L2SVM for Model Comparison ---
 with SystemDSContext() as sds:
@@ -150,8 +150,9 @@ with SystemDSContext() as sds:
     l2svm_acc = np.mean((l2svm_y_pred_maxed.flatten() == y_test.flatten()).astype(float))
     print(f"L2SVM Test Accuracy: {l2svm_acc}")
 
-# Save the trained L2SVM model
-joblib.dump(l2svm_model, 'l2svm_model.pkl')
+# Save only the weights of the L2SVM model
+l2svm_weights_serializable = l2svm_weights
+joblib.dump(l2svm_weights_serializable, 'l2svm_weights.pkl')
 
 # Updated L2SVM Model Outputs Visualization
 plt.figure(figsize=(10, 6))
