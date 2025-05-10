@@ -1,5 +1,6 @@
-# heart-attack-analysis
+# Heart Attack Analysis and Prediction
 
+![Heart Attack Analysis](correlation_heatmap.png)
 
 ## Heart Attack Analysis
 1.	Introduction
@@ -25,3 +26,109 @@ f)	Generate new features if needed
 g)	Carry out the chosen analytic task. Show results including intermediate results, as needed
 h)	Evaluate the solutions
 i)	Look for refinement opportunities
+
+## Setup and Running Instructions
+
+### Prerequisites
+- Python 3.8+ 
+- Required packages listed in `requirements.txt`
+
+### Installation
+1. Clone the repository:
+   ```
+   git clone https://github.com/j143/heart-attack-analysis
+   cd heart-attack-analysis
+   ```
+
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+
+### Running the Analysis
+
+#### Complete Analysis Workflow
+To run the entire analysis pipeline including model training, refinement, and evaluation:
+
+```
+python summary.py
+```
+
+This will:
+- Check for required dependencies
+- Run model refinement if needed
+- Compare original models with refined models
+- Display a complete project summary
+
+#### Step-by-Step Analysis
+
+1. Run the original analysis with SystemDS:
+   ```
+   python heart_attack_systemds.py
+   ```
+   This performs the initial data analysis, trains logistic regression and L2SVM models, and saves the model weights.
+
+2. Verify saved models:
+   ```
+   python verify_models.py
+   ```
+   This script verifies that the saved models can be loaded and used for predictions.
+
+3. Run model refinement:
+   ```
+   python model_refinement.py
+   ```
+   This script performs hyperparameter tuning with cross-validation and creates an ensemble model.
+
+4. Compare model performance:
+   ```
+   python model_comparison.py
+   ```
+   This script compares the performance of the original models with the refined models.
+
+### Key Results
+
+- The original L2SVM achieved ~82% accuracy
+- After refinement, the Random Forest model achieved ~95% accuracy
+- Key features for predicting heart attacks: Age, ECG Results, Sex, and Maximum Heart Rate
+
+For detailed information about the analysis process and results, please refer to the `solution.md` file.
+
+### Project Structure
+
+- `heart_attack_systemds.py`: Main analysis script using SystemDS
+- `verify_models.py`: Script to verify saved models
+- `model_refinement.py`: Implements hyperparameter tuning, cross-validation, and ensemble methods
+- `model_comparison.py`: Compares original and refined models
+- `summary.py`: Complete workflow script with project
+- `solution.md`: Detailed documentation of the approach and results
+- `Heart_Attack_Analysis_Data.csv`: Dataset
+- `requirements.txt`: List of required Python packages
+
+### Visualizations
+
+The analysis generates several visualizations:
+
+- Correlation heatmap
+- Feature distributions
+- Feature importance plots
+- Model performance comparisons
+- ROC curves
+
+### Saved Models
+
+The following models are saved during the analysis:
+
+- `logistic_regression_weights.pkl`: Original logistic regression model
+- `l2svm_weights.pkl`: Original L2SVM model
+- `scaler.pkl`: Data standardization parameters
+- `refined_random_forest_model.pkl`: Tuned Random Forest model
+- `refined_ensemble_model.pkl`: Ensemble of tuned models
+
+## Conclusion
+
+I have applied ML technique in heart attack analysis. I have utilized systemds and scikit-learn
+
+Key findings:
+1. Age, ECG Results, Sex, and Maximum Heart Rate seems to be the important predictors
+2. Hyperparameter tuning and cross-validation improved performance
