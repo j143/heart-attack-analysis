@@ -10,8 +10,8 @@
 - [x] 6. Feature Selection
 - [x] 7. Try Other Models
 - [x] 8. Model Evaluation & Comparison
-- [ ] 9. Model Refinement
-- [ ] 10. Prepare for Web App
+- [x] 9. Model Refinement
+
 
 ## Workflow Diagram
 
@@ -25,16 +25,15 @@ graph TD
     F[6 Feature Selection]:::done
     G[7 Try Other Models]:::done
     H[8 Model Evaluation & Comparison]:::done
-    I[9 Model Refinement]:::todo
-    J[10 Prepare for Web App]:::todo
+    I[9 Model Refinement]:::done
 
-    A --> B --> C --> D --> E --> F --> G --> H --> I --> J
+    A --> B --> C --> D --> E --> F --> G --> H --> I
 
     classDef done fill:#c6f6d5,stroke:#2f855a,color:#22543d
     classDef todo fill:#fefcbf,stroke:#b7791f,color:#744210
 
     class A,B,C,D,E,F,G,H done
-    class I,J todo
+    
 ```
 
 ---
