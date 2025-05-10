@@ -275,12 +275,62 @@ The following visualizations show how the test accuracy of each model changes wh
 
 **Math:**
 - Grid search: Try all parameter combinations
+- Randomized search: Sample from parameter distributions
+- Cross-validation: `CV score = mean(scores across k folds)`
+- Ensemble: `prediction = weighted_sum(model_predictions)`
 - Regularization: `L1 = sum |w|`, `L2 = sum w^2`
 
-| Param      | Example Values |
-|------------|---------------|
-| C (logreg) | 0.01, 0.1, 1  |
-| max_depth  | 3, 5, 10      |
+#### Hyperparameter Tuning
+
+We've implemented comprehensive hyperparameter tuning using both GridSearchCV and RandomizedSearchCV with 5-fold cross-validation:
+
+| Model | Tuning Method | Parameters Optimized |
+|-------|--------------|---------------------|
+| Logistic Regression | GridSearchCV | C, penalty, solver, class_weight |
+| SVM | RandomizedSearchCV | C, kernel, gamma, class_weight, degree |
+| Random Forest | RandomizedSearchCV | n_estimators, max_depth, min_samples_split, min_samples_leaf, max_features, bootstrap, class_weight |
+| Gradient Boosting | RandomizedSearchCV | n_estimators, learning_rate, max_depth, min_samples_split, min_samples_leaf, subsample, max_features |
+
+#### Cross-Validation Strategy
+
+- **K-Fold Strategy**: 5-fold stratified cross-validation
+- **Benefits**: Ensures model performs consistently across different subsets of data
+- **Implementation**: StratifiedKFold from scikit-learn to maintain class distribution across folds
+
+#### Ensemble Methods
+
+We've implemented a voting ensemble to further improve model accuracy:
+
+- **Voting Classifier**: Combines predictions from all tuned models
+- **Voting Strategy**: Soft voting (weighted probability-based)
+- **Components**: Tuned Logistic Regression, SVM, Random Forest, and Gradient Boosting
+
+#### Model Refinement Results
+
+After implementing hyperparameter tuning, cross-validation, and ensemble methods, we observed significant improvements in model performance:
+
+| Model | Accuracy | Precision | Recall | F1 Score | AUC |
+|-------|----------|-----------|--------|----------|-----|
+| Original Logistic Regression | 0.6557 | 0.6897 | 0.6250 | 0.6557 | 0.6369 |
+| Original L2SVM | 0.8197 | 0.8889 | 0.7500 | 0.8136 | 0.8922 |
+| **Refined Random Forest** | **0.9508** | **0.9143** | **1.0000** | **0.9552** | **0.9483** |
+| Refined Ensemble | 0.9344 | 0.9118 | 0.9688 | 0.9394 | 0.9353 |
+
+**Key Findings**:
+- Random Forest with tuned hyperparameters achieved the best overall performance with 95% accuracy
+- All refined models outperformed the original models by a substantial margin
+- The ensemble method provides robust predictions with high recall (96.9%)
+- Cross-validation confirmed the consistency of our models across different data subsets
+
+**Visualizations**:
+- ROC Curves for All Models:
+  ![ROC Curves for All Models](model_refinement_roc_curves.png)
+
+- Model Comparison (Accuracy):
+  ![Model Comparison - Accuracy](model_comparison_accuracy.png)
+
+- Random Forest Feature Importance:
+  ![Random Forest Feature Importance](random_forest_feature_importance.png)
 
 ### 10. Prepare for Web App
 
