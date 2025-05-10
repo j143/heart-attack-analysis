@@ -90,7 +90,9 @@ This will:
 
 - The original L2SVM achieved ~82% accuracy
 - After refinement, the Random Forest model achieved ~95% accuracy
-- Key features for predicting heart attacks: Age, ECG Results, Sex, and Maximum Heart Rate
+- Key features for predicting heart attacks based on different models:
+  - SystemDS Logistic Regression: Age, ECG Results, Sex, MaxHeartRate
+  - Refined Random Forest: CP_Type, MaxHeartRate, Age, Cholestrol, BloodPressure
 
 For detailed information about the analysis process and results, please refer to the `solution.md` file.
 
@@ -130,5 +132,7 @@ The following models are saved during the analysis:
 I have applied ML technique in heart attack analysis. I have utilized systemds and scikit-learn
 
 Key findings:
-1. Age, ECG Results, Sex, and Maximum Heart Rate seems to be the important predictors
+1. Different models identified different important predictors:
+   - Initial models (Logistic Regression): Age, ECG Results, Sex, Maximum Heart Rate
+   - Refined models (Random Forest): CP_Type, Maximum Heart Rate, Age, Cholestrol, BloodPressure
 2. Hyperparameter tuning and cross-validation improved performance
