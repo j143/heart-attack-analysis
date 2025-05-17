@@ -5,7 +5,6 @@ import seaborn as sns
 from systemds.context import SystemDSContext
 from systemds.operator.algorithm import multiLogReg, multiLogRegPredict, l2svm, l2svmPredict, pca
 import itertools
-from sklearn.decomposition import PCA
 import joblib
 
 # 1. Load data
