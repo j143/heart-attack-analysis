@@ -1,0 +1,9 @@
+{
+    "data_path": "data/Heart_Attack_Analysis_Data.csv",
+    "output_models_dir": "outputs/models",
+    "output_plots_dir": "outputs/plots",
+    "random_state": 42,
+    "test_size": 0.2,
+    "cross_validation_folds": 5,
+    "correlation_threshold": 0.8
+}

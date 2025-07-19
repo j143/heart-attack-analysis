@@ -47,44 +47,53 @@ i)	Look for refinement opportunities
 
 ### Running the Analysis
 
-#### Complete Analysis Workflow
-To run the entire analysis pipeline including model training, refinement, and evaluation:
+#### Quick Start (New CLI Interface)
 
-```
-python summary.py
-```
+1. **Set up the project structure:**
+   ```bash
+   python main.py setup
+   ```
 
-This will:
-- Check for required dependencies
-- Run model refinement if needed
-- Compare original models with refined models
-- Display a complete project summary
+2. **Run complete analysis:**
+   ```bash
+   python main.py analyze
+   ```
 
-#### Step-by-Step Analysis
+3. **Run specific components:**
+   ```bash
+   # Data exploration only
+   python main.py explore
+   
+   # Model training only
+   python main.py train --type sklearn
+   
+   # Model evaluation
+   python main.py evaluate
+   ```
 
-1. Run the original analysis with SystemDS:
-   ```
-   python heart_attack_systemds.py
-   ```
-   This performs the initial data analysis, trains logistic regression and L2SVM models, and saves the model weights.
+#### Legacy Compatibility
 
-2. Verify saved models:
-   ```
-   python verify_models.py
-   ```
-   This script verifies that the saved models can be loaded and used for predictions.
+The original scripts are still available with enhanced functionality:
 
-3. Run model refinement:
+1. **SystemDS Analysis:**
+   ```bash
+   python legacy_systemds_analysis.py
    ```
-   python model_refinement.py
-   ```
-   This script performs hyperparameter tuning with cross-validation and creates an ensemble model.
 
-4. Compare model performance:
+2. **Model Refinement:**
+   ```bash
+   python legacy_model_refinement.py
    ```
-   python model_comparison.py
+
+3. **Model Comparison:**
+   ```bash
+   python legacy_model_comparison.py
    ```
-   This script compares the performance of the original models with the refined models.
+
+4. **Complete Workflow:**
+   ```bash
+   python summary.py
+   ```
 
 ### Key Results
 
@@ -98,14 +107,43 @@ For detailed information about the analysis process and results, please refer to
 
 ### Project Structure
 
-- `heart_attack_systemds.py`: Main analysis script using SystemDS
-- `verify_models.py`: Script to verify saved models
-- `model_refinement.py`: Implements hyperparameter tuning, cross-validation, and ensemble methods
-- `model_comparison.py`: Compares original and refined models
-- `summary.py`: Complete workflow script with project
-- `solution.md`: Detailed documentation of the approach and results
-- `Heart_Attack_Analysis_Data.csv`: Dataset
-- `requirements.txt`: List of required Python packages
+```
+heart-attack-analysis/
+├── src/heart_attack_analysis/          # Main package
+│   ├── data_processing/                # Data loading and preprocessing
+│   │   ├── __init__.py
+│   │   └── data_loader.py
+│   ├── modeling/                       # Model training and evaluation
+│   │   ├── __init__.py
+│   │   └── model_trainer.py
+│   ├── visualization/                  # Plotting and visualization
+│   │   ├── __init__.py
+│   │   └── plotter.py
+│   ├── utils/                          # Utility functions
+│   │   ├── __init__.py
+│   │   └── helpers.py
+│   └── __init__.py
+├── data/                               # Data files
+│   ├── Heart_Attack_Analysis_Data.csv
+│   └── README.md
+├── outputs/                            # Generated outputs
+│   ├── models/                         # Saved models
+│   └── plots/                          # Generated plots
+├── config/                             # Configuration files
+├── tests/                              # Test files
+├── main.py                             # CLI interface
+├── legacy_*.py                         # Legacy compatibility scripts
+├── setup.py                           # Package setup
+├── requirements.txt                    # Dependencies
+└── README.md                           # This file
+```
+
+#### Legacy Scripts (for backward compatibility)
+- `legacy_systemds_analysis.py`: Original SystemDS analysis
+- `legacy_model_refinement.py`: Model refinement with hyperparameter tuning
+- `legacy_model_comparison.py`: Model comparison and evaluation
+- `summary.py`: Complete workflow script
+- `verify_models.py`: Model validation script
 
 ### Visualizations
 
