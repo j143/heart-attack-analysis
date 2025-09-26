@@ -55,6 +55,19 @@ test_labels = test_dataset.pop('MPG')
 
 ## build the model
 
+"""
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense (Dense)                (None, 64)                640       
+_________________________________________________________________
+dense_1 (Dense)              (None, 64)                4160      
+_________________________________________________________________
+dense_2 (Dense)              (None, 1)                 65        
+=================================================================
+"""
+
 def build_model():
     model = keras.Sequential([
         layers.Dense(64, activation='relu', input_shape=[len(train_dataset.keys())]),
@@ -71,5 +84,27 @@ model = build_model()
 
 model.summary()
 
+"""
+Train the model
 
+"""
+
+## train the model
+
+"""Let's train the model, record training & validation accuracy 
+store it in a `history` object.
+"""
+
+model = build_model()
+
+EPOCHS = 1000
+
+# The patience parameter, till when we check for improvement
+
+early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
+
+early_history = model.fit(train_dataset, train_labels, epochs=EPOCHS, validation_split=0.2, verbose=0, callbacks=[early_stop])
+
+
+model.save(BUCKET + '/mpg/model')
 
